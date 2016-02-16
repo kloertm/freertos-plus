@@ -26,19 +26,27 @@ FREERTOS_SRC = $(CODEBASE)/libraries/FreeRTOS
 FREERTOS_INC = $(FREERTOS_SRC)/include/                                       
 FREERTOS_PORT_INC = $(FREERTOS_SRC)/portable/GCC/ARM_$(ARCH)/
 
+LWIP_SRC = $(CODEBASE)/libraries/lwip/src
+LWIP_INC = $(LWIP_SRC)/include
+
 OUTDIR = build
 SRCDIR = src\
          $(CMSIS_LIB)/CoreSupport \
          $(STM32_LIB)/src \
          $(CMSIS_PLAT_SRC) \
-	 $(FREERTOS_SRC)
+	 $(FREERTOS_SRC) \
+         $(LWIP_SRC)
 INCDIR = include \
          $(CMSIS_LIB)/CoreSupport \
          $(STM32_LIB)/inc \
          $(CMSIS_PLAT_SRC) \
 	 $(FREERTOS_INC) \
-	 $(FREERTOS_PORT_INC)
+	 $(FREERTOS_PORT_INC) \
+         $(LWIP_INC)
 INCLUDES = $(addprefix -I,$(INCDIR))
+INCLUDES += -I$(LWIP_SRC)/../test/unit
+INCLUDES += -I$(CODEBASE)/libraries
+
 DATDIR = data
 TOOLDIR = tool
 TMPDiR = output
