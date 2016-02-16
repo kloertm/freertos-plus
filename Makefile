@@ -7,7 +7,7 @@ CFLAGS = -fno-common -O0 \
 	 -std=c99 -pedantic \
 	 -gdwarf-2 -ffreestanding -g3 \
 	 -mcpu=cortex-m3 -mthumb \
-	 -Wall -Werror \
+	 -Wall \
 	 -Tmain.ld -nostartfiles \
 	 -DUSER_NAME=\"$(USER)\"
 
@@ -26,8 +26,8 @@ FREERTOS_SRC = $(CODEBASE)/libraries/FreeRTOS
 FREERTOS_INC = $(FREERTOS_SRC)/include/                                       
 FREERTOS_PORT_INC = $(FREERTOS_SRC)/portable/GCC/ARM_$(ARCH)/
 
-LWIP_SRC = $(CODEBASE)/libraries/lwip/src
-LWIP_INC = $(LWIP_SRC)/include
+LWIP_SRC = $(CODEBASE)/libraries/lwip-1.4.0/src
+LWIP_INC = $(CODEBASE)/libraries/lwip-1.4.0/src/include
 
 OUTDIR = build
 SRCDIR = src\
@@ -35,7 +35,12 @@ SRCDIR = src\
          $(STM32_LIB)/src \
          $(CMSIS_PLAT_SRC) \
 	 $(FREERTOS_SRC) \
-         $(LWIP_SRC)
+         $(LWIP_SRC) \
+         $(LWIP_SRC)/api \
+         $(LWIP_SRC)/core \
+         $(LWIP_SRC)/netif \
+         $(LWIP_SRC)/core/snmp \
+         $(LWIP_SRC)/core/ipv4
 INCDIR = include \
          $(CMSIS_LIB)/CoreSupport \
          $(STM32_LIB)/inc \
@@ -44,7 +49,7 @@ INCDIR = include \
 	 $(FREERTOS_PORT_INC) \
          $(LWIP_INC)
 INCLUDES = $(addprefix -I,$(INCDIR))
-INCLUDES += -I$(LWIP_SRC)/../test/unit
+INCLUDES += -I$(LWIP_INC)/ipv4
 INCLUDES += -I$(CODEBASE)/libraries
 
 DATDIR = data
@@ -96,6 +101,3 @@ clean:
 	rm -rf $(OUTDIR) $(TMPDIR)
 
 -include $(DEP)
-
-
-

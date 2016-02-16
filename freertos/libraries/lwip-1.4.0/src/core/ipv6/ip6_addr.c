@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001-2003 Swedish Institute of Computer Science.
+ * Copyright (c) 2001-2004 Swedish Institute of Computer Science.
  * All rights reserved. 
  * 
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -29,63 +29,44 @@
  * Author: Adam Dunkels <adam@sics.se>
  *
  */
-#ifndef __CC_H__
-#define __CC_H__
 
-typedef unsigned   char    u8_t;
-typedef signed     char    s8_t;
-typedef unsigned   short   u16_t;
-typedef signed     short   s16_t;
-typedef unsigned   long    u32_t;
-typedef signed     long    s32_t;
-typedef u32_t mem_ptr_t;
-typedef int sys_prot_t;
+#include "lwip/opt.h"
+#include "lwip/ip_addr.h"
+#include "lwip/inet.h"
 
+u8_t
+ip_addr_netcmp(struct ip_addr *addr1, struct ip_addr *addr2,
+                struct ip_addr *mask)
+{
+  return((addr1->addr[0] & mask->addr[0]) == (addr2->addr[0] & mask->addr[0]) &&
+         (addr1->addr[1] & mask->addr[1]) == (addr2->addr[1] & mask->addr[1]) &&
+         (addr1->addr[2] & mask->addr[2]) == (addr2->addr[2] & mask->addr[2]) &&
+         (addr1->addr[3] & mask->addr[3]) == (addr2->addr[3] & mask->addr[3]));
+        
+}
 
-#define U16_F "hu"
-#define S16_F "d"
-#define X16_F "hx"
-#define U32_F "u"
-#define S32_F "d"
-#define X32_F "x"
-#define SZT_F "uz" 
+u8_t
+ip_addr_cmp(struct ip_addr *addr1, struct ip_addr *addr2)
+{
+  return(addr1->addr[0] == addr2->addr[0] &&
+         addr1->addr[1] == addr2->addr[1] &&
+         addr1->addr[2] == addr2->addr[2] &&
+         addr1->addr[3] == addr2->addr[3]);
+}
 
+void
+ip_addr_set(struct ip_addr *dest, struct ip_addr *src)
+{
+  SMEMCPY(dest, src, sizeof(struct ip_addr));
+  /*  dest->addr[0] = src->addr[0];
+  dest->addr[1] = src->addr[1];
+  dest->addr[2] = src->addr[2];
+  dest->addr[3] = src->addr[3];*/
+}
 
-
-
-
-/* define compiler specific symbols */
-#if defined (__ICCARM__)
-
-#define PACK_STRUCT_BEGIN
-#define PACK_STRUCT_STRUCT 
-#define PACK_STRUCT_END
-#define PACK_STRUCT_FIELD(x) x
-#define PACK_STRUCT_USE_INCLUDES
-
-#elif defined (__CC_ARM)
-
-#define PACK_STRUCT_BEGIN __packed
-#define PACK_STRUCT_STRUCT 
-#define PACK_STRUCT_END
-#define PACK_STRUCT_FIELD(x) x
-
-#elif defined (__GNUC__)
-
-#define PACK_STRUCT_BEGIN
-#define PACK_STRUCT_STRUCT __attribute__ ((__packed__))
-#define PACK_STRUCT_END
-#define PACK_STRUCT_FIELD(x) x
-
-#elif defined (__TASKING__)
-
-#define PACK_STRUCT_BEGIN
-#define PACK_STRUCT_STRUCT
-#define PACK_STRUCT_END
-#define PACK_STRUCT_FIELD(x) x
-
-#endif
-
-#define LWIP_PLATFORM_ASSERT(x) //do { if(!(x)) while(1); } while(0)
-
-#endif /* __CC_H__ */
+u8_t
+ip_addr_isany(struct ip_addr *addr)
+{
+  if (addr == NULL) return 1;
+  return((addr->addr[0] | addr->addr[1] | addr->addr[2] | addr->addr[3]) == 0);
+}

@@ -17,6 +17,13 @@
 #include "shell.h"
 #include "host.h"
 
+/* lwip includes */
+#include "lwip/err.h"
+#include "lwip/sockets.h"
+#include "lwip/sys.h"
+#include "lwip/netdb.h"
+#include "lwip/dns.h"
+
 /* _sromfs symbol can be found in main.ld linker script
  * it contains file system structure of test_romfs directory
  */

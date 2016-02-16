@@ -1,3 +1,0 @@
-[submodule "freertos/libraries/lwip"]
-	path = freertos/libraries/lwip
-	url = https://github.com/tabascoeye/lwip.git
